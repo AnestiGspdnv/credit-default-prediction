@@ -1,0 +1,27 @@
+# Data manipulation
+pandas==2.2.2
+numpy==1.26.4
+
+# Visualization
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# Machine Learning - Classical
+scikit-learn==1.5.1
+xgboost==2.1.1
+lightgbm==4.5.0
+optuna==3.6.1
+
+# Deep Learning
+torch==2.3.1
+
+# Utilities
+joblib==1.4.2
+tqdm==4.66.4
+
+# PDF report
+reportlab==4.2.2
+
+# Notebook (EDA only)
+jupyter==1.0.0
+ipykernel==6.29.5

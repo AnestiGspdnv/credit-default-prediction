@@ -1,0 +1,35 @@
+# Data files (too large for git)
+data/*.csv
+data/*.xls
+data/*.xlsx
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Results (regenerable)
+results/*.png
+results/*.json
+results/*.joblib
+
+# OS
+.DS_Store
+Thumbs.db
