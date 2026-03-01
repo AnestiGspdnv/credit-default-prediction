@@ -13,19 +13,23 @@ def main():
     print("#                                                               #")
     print("#" * 65)
 
-    # PARTIE 1 : Modèles classiques
-    print("\n################  PARTIE 1 : MODÈLES CLASSIQUES  ################")
+    # Partie PRÉTRAITEMENT
+    print("\n################  PARTIE 1 : PRÉTRAITEMENT  ################")
+    from pretraitement import lancer_pretraitement
+    X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
+
+    # PARTIE 2 : Modèles classiques
+    print("\n################  PARTIE 2 : MODÈLES CLASSIQUES  ################")
     from entrainement_classique import entrainer_modeles_classiques
     resultats_classiques, _ = entrainer_modeles_classiques()
 
-    # PARTIE 2 : Deep Learning
-    print("\n################  PARTIE 2 : DEEP LEARNING + FOCAL LOSS  ################")
+    # PARTIE 3 : Deep Learning
+    print("\n################  PARTIE 3 : DEEP LEARNING + FOCAL LOSS  ################")
     from entrainement_deep import entrainer_deep_learning
     resultats_dl, _ = entrainer_deep_learning()
 
-    # PARTIE 3 : Comparaison finale
+    # PARTIE 4 : Comparaison finale
     print("\n################  COMPARAISON FINALE DE TOUS LES MODÈLES  ################")
-
     # Fusionner tous les résultats
     tous = {}
     tous.update(resultats_classiques)

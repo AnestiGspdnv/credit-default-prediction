@@ -21,9 +21,7 @@ warnings.filterwarnings("ignore")
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 from pretraitement import lancer_pretraitement
 
-
 # Évaluer de modèle
-
 def evaluer_modele(nom, modele, X_test, y_test):
 
     y_pred = modele.predict(X_test)
@@ -52,7 +50,6 @@ def evaluer_modele(nom, modele, X_test, y_test):
         "f1_score": f1, "auc_roc": auc,
         "y_pred": y_pred, "y_proba": y_proba
     }
-
 
 # cv
 def cross_validation_rapide(nom, modele, X_train, y_train):
@@ -88,17 +85,13 @@ def tracer_matrice_confusion(nom, y_test, y_pred, chemin=None):
         print(f"Sauvegardé: {chemin}")
     plt.close()
 
-
 # principal
-
 def entrainer_modeles_classiques():
-    print("#Modèles Classiques")
 
     # Charger les données prétraitées
     X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
 
     # Partie 1 :
-
     print("\n1 : Modèles Baseline par défaut")
     modeles_baseline = {
         "Logistic Regression": LogisticRegression(
@@ -121,8 +114,7 @@ def entrainer_modeles_classiques():
         cross_validation_rapide(nom, modele, X_train, y_train)
 
     # Partie 2
-
-    print("\n2 : Optimisation des hyperparamètres -Optuna")
+    print("\n2 : Optimisation des hyperparamètres (Optuna)")
 
     # Logistic Regression
 
@@ -289,7 +281,5 @@ def entrainer_modeles_classiques():
 
     return tous_les_resultats, donnees_roc
 
-
-# =================
 if __name__ == "__main__":
     resultats, roc_data = entrainer_modeles_classiques()
