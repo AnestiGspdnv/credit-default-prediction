@@ -93,7 +93,7 @@ def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=N
         X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
 
     # Partie 1 :
-    print("\n1 : Modèles Baseline par défaut")
+    print("\n1. Modèles Baseline par défaut")
     modeles_baseline = {
         "Logistic Regression": LogisticRegression(
             max_iter=1000, random_state=42, class_weight="balanced"
@@ -115,7 +115,7 @@ def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=N
         cross_validation_rapide(nom, modele, X_train, y_train)
 
     # Partie 2
-    print("\n2 : Optimisation des hyperparamètres (Optuna)")
+    print("\n2. Optimisation Optuna")
 
     # Logistic Regression
 
@@ -199,7 +199,7 @@ def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=N
 
 
     # Partie 3
-    print("\n3 : Entraînement final et Evaluation")
+    print("\n3. Entraînement final et Evaluation")
 
     # Reconstruire les modèles avec les meilleurs paramètres
     params_lr = study_lr.best_params
@@ -246,7 +246,7 @@ def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=N
 
     # Partie 4 : Courbes ROC comparatives
 
-    print("\n4. Courbes ROC")
+    print("\n4. Tableau de comparaison Courbes ROC créé")
 
     fig, ax = plt.subplots(figsize=(8, 6))
     for nom, data in donnees_roc.items():
@@ -268,7 +268,7 @@ def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=N
 
 
     # Partie 5 :
-    print(" Tableau récapitulatif")
+    print("\n5. Tableau récapitulatif")
     recap = pd.DataFrame(tous_les_resultats).T.round(4)
     print(recap.to_string())
 
