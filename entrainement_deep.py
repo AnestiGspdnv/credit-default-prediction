@@ -19,8 +19,6 @@ optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 from pretraitement import lancer_pretraitement
 
-
-
 # Focal Loss
 class FocalLoss(nn.Module):
 
@@ -52,8 +50,6 @@ class FocalLoss(nn.Module):
 
     def __repr__(self):
         return f"FocalLoss(alpha={self.alpha}, gamma={self.gamma})"
-
-
 
 # Réseau de Neurones
 class ReseauCredit(nn.Module):
@@ -97,10 +93,7 @@ class ReseauCredit(nn.Module):
         logits = self.sortie(x)
         return logits
 
-
-
 # fonctions d'Entraînement
-
 def entrainer_reseau(model, criterion, X_train, y_train, X_val, y_val,
                      lr=0.001, epochs=100, batch_size=256, patience=15):
 
@@ -172,7 +165,6 @@ def entrainer_reseau(model, criterion, X_train, y_train, X_val, y_val,
 
     return historique
 
-
 def predire_proba(model, X):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.eval()
@@ -182,18 +174,17 @@ def predire_proba(model, X):
         proba = torch.sigmoid(logits).cpu().numpy()
     return proba
 
-
-
 # principal
-
-def entrainer_deep_learning():
+def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, y_val=None, y_test=None):
 
     print("Apprentissage profond et Focal Loss")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device : {device}")
 
-    X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
+    if X_train is None:
+        X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
+
     nb_features = X_train.shape[1]
     print(f"Nm de features : {nb_features}")
 
