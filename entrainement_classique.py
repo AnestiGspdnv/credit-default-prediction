@@ -86,10 +86,11 @@ def tracer_matrice_confusion(nom, y_test, y_pred, chemin=None):
     plt.close()
 
 # principal
-def entrainer_modeles_classiques():
+def entrainer_modeles_classiques(X_train=None, X_val=None, X_test=None,y_train=None, y_val=None, y_test=None):
 
     # Charger les données prétraitées
-    X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
+    if X_train is None:
+        X_train, X_val, X_test, y_train, y_val, y_test = lancer_pretraitement()
 
     # Partie 1 :
     print("\n1 : Modèles Baseline par défaut")
