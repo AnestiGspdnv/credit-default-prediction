@@ -66,7 +66,7 @@ def nettoyer_donnees(df):
 #3 : Créer des nouvelles variables
 def creer_features(df):
 
-    print("\n2.Feature engineering")
+    print("\n2. Feature engineering")
     df = df.copy()
 
     # Taux d'utilisation du crédit
@@ -117,7 +117,7 @@ def creer_features(df):
 # 4 : Encoder les variables catégorielles
 def encoder_categories(df):
 
-    print("\n3.Encodage des catégories")
+    print("\n3. Encodage des catégories")
 
     df = df.copy()
     colonnes_cat = ["sex", "education", "marriage"]
@@ -135,7 +135,7 @@ def encoder_categories(df):
 # 5 : Séparer et normaliser les données
 def separer_et_normaliser(df):
 
-    print("\n4.Séparation et normalisation")
+    print("\n4. Séparation et normalisation")
 
     X = df.drop(columns=["default"])
     y = df["default"]
@@ -178,15 +178,13 @@ def separer_et_normaliser(df):
 # lance tout le prétraitement
 def lancer_pretraitement(chemin="data/credit_card_default.csv"):
 
-    print("\nPrétraitement des données")
-
     df = charger_donnees(chemin)
     df = nettoyer_donnees(df)
     df = creer_features(df)
     df = encoder_categories(df)
     X_train, X_val, X_test, y_train, y_val, y_test = separer_et_normaliser(df)
 
-    print(f"\n5.Résumé: {X_train.shape[1]} features, {X_train.shape[0]} samples train")
+    print(f"\n5. Résumé: {X_train.shape[1]} features, {X_train.shape[0]} samples train")
 
     return X_train, X_val, X_test, y_train, y_val, y_test
 
