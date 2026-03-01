@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 import os
+import warnings
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -14,6 +15,11 @@ from sklearn.metrics import (
 import xgboost as xgb
 import lightgbm as lgb
 import optuna
+
+# pour moins de bruit
+warnings.filterwarnings("ignore")
+optuna.logging.set_verbosity(optuna.logging.WARNING)
+from pretraitement import lancer_pretraitement
 
 
 # Évaluer de modèle
