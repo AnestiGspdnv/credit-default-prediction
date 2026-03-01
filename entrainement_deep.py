@@ -186,7 +186,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     print(f"Nm de features : {nb_features}")
 
     # Partie 1 : Optimisation des hyperparamètres Optuna
-    print("\n1.Optimisation Optuna")
+    print("\n1. Optimisation Optuna")
     def objectif_nn(trial):
         n_couches = trial.suggest_int("n_couches", 2, 4)
         dims = []
@@ -232,7 +232,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
 
 
     # Partie 2:
-    print("\n2.Entraînement Final")
+    print("\n2. Entraînement Final")
 
     bp = study.best_params
     n_couches = bp["n_couches"]
@@ -256,7 +256,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     )
 
     # Partie 3
-    print("\n3.Courbes d'apprentissage")
+    print("\n3. Courbes d'apprentissage")
 
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(historique["train_loss"], label="Train Loss", linewidth=2)
@@ -285,7 +285,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
         print("Pas de surapprentissage visible")
 
     # Partie 4 :
-    print("\n4.Évaluation sur le Test set")
+    print("\n4. Évaluation sur le Test set")
 
     y_proba = predire_proba(model_final, X_test)
     y_pred = (y_proba >= 0.5).astype(int)
@@ -325,7 +325,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
 
 
     # Partie 5
-    print("\n5.Cross-Validation du Deep Learning (5-Fold)")
+    print("\n5. Cross-Validation du Deep Learning (5-Fold)")
 
     # combiner train et val pour la cv
     X_cv = np.vstack([X_train.values, X_val.values])
