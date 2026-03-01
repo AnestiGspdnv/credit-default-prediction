@@ -203,3 +203,93 @@ def entrainer_modeles_classiques():
     study_lgbm = optuna.create_study(direction="maximize")
     study_lgbm.optimize(objectif_lgbm, n_trials=30)
     print(f"Meilleur AUC: {study_lgbm.best_value:.4f} Params : {study_lgbm.best_params}")
+
+
+    # Partie 3
+    print("\n3 : Entraînement final et Evaluation")
+
+    # Reconstruire les modèles avec les meilleurs paramètres
+    params_lr = study_lr.best_params
+    solver_lr = "saga" if params_lr.get("penalty") == "l1" else "lbfgs"
+    modeles_optimises = {
+        "Logistic Regression": LogisticRegression(
+            **params_lr, solver=solver_lr, max_iter=2000,
+            random_state=42, class_weight="balanced"
+        ),
+        "Random Forest": RandomForestClassifier(
+            **study_rf.best_params, class_weight="balanced",
+            random_state=42, n_jobs=-1
+        ),
+        "XGBoost": xgb.XGBClassifier(
+            **study_xgb.best_params, eval_metric="logloss",
+            random_state=42, use_label_encoder=False, verbosity=0
+        ),
+        "LightGBM": lgb.LGBMClassifier(
+            **study_lgbm.best_params, is_unbalance=True,
+            random_state=42, verbose=-1
+        ),
+    }
+
+    # entraîner et évaluer chaque modèle
+    tous_les_resultats = {}
+    donnees_roc = {}
+
+    for nom, modele in modeles_optimises.items():
+        modele.fit(X_train, y_train)
+        resultats = evaluer_modele(nom, modele, X_test, y_test)
+        tous_les_resultats[nom] = {
+            k: float(v) for k, v in resultats.items()
+            if k not in ["y_pred", "y_proba"]
+        }
+        donnees_roc[nom] = {"y_true": y_test, "y_proba": resultats["y_proba"]}
+
+        # Matrice de confusion
+        nom_fichier = nom.lower().replace(" ", "_")
+        tracer_matrice_confusion(
+            nom, y_test, resultats["y_pred"],
+            chemin=f"resultats/confusion_{nom_fichier}.png"
+        )
+
+
+    # Partie 4 : Courbes ROC comparatives
+
+    print("\n4. Courbes ROC")
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    for nom, data in donnees_roc.items():
+        fpr, tpr, _ = roc_curve(data["y_true"], data["y_proba"])
+        auc_val = roc_auc_score(data["y_true"], data["y_proba"])
+        ax.plot(fpr, tpr, label=f"{nom} (AUC={auc_val:.3f})", linewidth=2)
+
+    ax.plot([0, 1], [0, 1], "k--", label="Aléatoire (AUC=0.500)")
+    ax.set_xlabel("Taux de faux positifs")
+    ax.set_ylabel("Taux de vrais positifs")
+    ax.set_title("Courbes ROC - Modèles Classiques")
+    ax.legend(loc="lower right")
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+
+    os.makedirs("resultats", exist_ok=True)
+    plt.savefig("resultats/courbes_roc_classiques.png", dpi=150, bbox_inches="tight")
+    plt.close()
+
+
+    # Partie 5 :
+    print(" Tableau récapitulatif")
+    recap = pd.DataFrame(tous_les_resultats).T.round(4)
+    print(recap.to_string())
+
+    meilleur = max(tous_les_resultats, key=lambda k: tous_les_resultats[k]["auc_roc"])
+    print(f"\nMeilleur modèle classique : {meilleur}")
+    print(f"AUC-ROC = {tous_les_resultats[meilleur]['auc_roc']:.4f}")
+
+    # Sauvegarder les métriques en json
+    with open("resultats/metriques_classiques.json", "w") as f:
+        json.dump(tous_les_resultats, f, indent=2, ensure_ascii=False)
+
+    return tous_les_resultats, donnees_roc
+
+
+# =================
+if __name__ == "__main__":
+    resultats, roc_data = entrainer_modeles_classiques()
