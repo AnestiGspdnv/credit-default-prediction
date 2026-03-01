@@ -3,10 +3,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# 1 : Charger les données
-print('\n')
-print('1.')
+#1 : Charger les données
 def charger_donnees(chemin="data/credit_card_default.csv"):
+
     df = pd.read_csv(chemin)
 
     # nettoyer les noms de colonnes
@@ -30,12 +29,9 @@ def charger_donnees(chemin="data/credit_card_default.csv"):
     return df
 
 # 2 : Nettoyer les données
-
 def nettoyer_donnees(df):
 
-    print('\n')
-    print('2.')
-    print("Nettoyage des données")
+    print("\n1. Nettoyage des données")
 
     df = df.copy()
 
@@ -67,15 +63,10 @@ def nettoyer_donnees(df):
         print(f"Pas de doublons")
     return df
 
-
-
 #3 : Créer des nouvelles variables
-
 def creer_features(df):
 
-    print('\n')
-    print('3.')
-    print("Feature engineering")
+    print("\n2.Feature engineering")
     df = df.copy()
 
     # Taux d'utilisation du crédit
@@ -123,14 +114,10 @@ def creer_features(df):
     print(f"total : {df.shape[1]} colonnes")
     return df
 
-
-
 # 4 : Encoder les variables catégorielles
-
 def encoder_categories(df):
-    print('\n')
-    print('4.')
-    print("Encodage des catégories")
+
+    print("\n3.Encodage des catégories")
 
     df = df.copy()
     colonnes_cat = ["sex", "education", "marriage"]
@@ -145,13 +132,10 @@ def encoder_categories(df):
 
     return df
 
-
 # 5 : Séparer et normaliser les données
 def separer_et_normaliser(df):
-    print('\n')
-    print('5.')
-    print("Séparation et normalisation")
 
+    print("\n4.Séparation et normalisation")
 
     X = df.drop(columns=["default"])
     y = df["default"]
@@ -192,10 +176,9 @@ def separer_et_normaliser(df):
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 # lance tout le prétraitement
-
 def lancer_pretraitement(chemin="data/credit_card_default.csv"):
 
-    print("Prétraitement des données")
+    print("\nPrétraitement des données")
 
     df = charger_donnees(chemin)
     df = nettoyer_donnees(df)
@@ -203,10 +186,9 @@ def lancer_pretraitement(chemin="data/credit_card_default.csv"):
     df = encoder_categories(df)
     X_train, X_val, X_test, y_train, y_val, y_test = separer_et_normaliser(df)
 
-    print(f"\nRésumé: {X_train.shape[1]} features, {X_train.shape[0]} samples train")
+    print(f"\n5.Résumé: {X_train.shape[1]} features, {X_train.shape[0]} samples train")
 
     return X_train, X_val, X_test, y_train, y_val, y_test
-
 
 # Si on lance ce fichier directement
 if __name__ == "__main__":
