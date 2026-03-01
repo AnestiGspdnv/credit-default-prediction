@@ -1,7 +1,8 @@
 import json
 import warnings
 import pandas as pd
-
+import os
+os.environ["LOKY_MAX_CPU_COUNT"] = "6"
 warnings.filterwarnings("ignore")
 
 def main():
