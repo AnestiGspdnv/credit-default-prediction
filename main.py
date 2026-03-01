@@ -21,16 +21,16 @@ def main():
     # PARTIE 2 : Modèles classiques
     print("\n################  PARTIE 2 : MODÈLES CLASSIQUES  ################")
     from entrainement_classique import entrainer_modeles_classiques
-    resultats_classiques, _ = entrainer_modeles_classiques()
+    resultats_classiques, _ = entrainer_modeles_classiques(X_train, X_val, X_test, y_train, y_val, y_test)
 
     # PARTIE 3 : Deep Learning
     print("\n################  PARTIE 3 : DEEP LEARNING + FOCAL LOSS  ################")
     from entrainement_deep import entrainer_deep_learning
-    resultats_dl, _ = entrainer_deep_learning()
+    resultats_dl, _ = entrainer_deep_learning(X_train, X_val, X_test, y_train, y_val, y_test)
 
     # PARTIE 4 : Comparaison finale
     print("\n################  COMPARAISON FINALE DE TOUS LES MODÈLES  ################")
-    # Fusionner tous les résultats
+
     tous = {}
     tous.update(resultats_classiques)
     for nom, metriques in resultats_dl.items():
@@ -38,13 +38,11 @@ def main():
         tous[nom] = {k: v for k, v in metriques.items()
                      if k in ["accuracy", "precision", "recall", "f1_score", "auc_roc"]}
 
-    # Afficher le tableau
     print("\n" + "-" * 65)
     recap = pd.DataFrame(tous).T.round(4)
     print(recap.to_string())
     print("-" * 65)
 
-    # Trouver le meilleur
     meilleur_nom = max(tous, key=lambda k: tous[k].get("auc_roc", 0))
     meilleur_auc = tous[meilleur_nom]["auc_roc"]
     meilleur_f1 = tous[meilleur_nom]["f1_score"]
@@ -53,7 +51,6 @@ def main():
     print(f"     AUC-ROC  = {meilleur_auc:.4f}")
     print(f"     F1-Score = {meilleur_f1:.4f}")
 
-    # Sauvegarder
     tous_float = {
         nom: {k: float(v) for k, v in m.items()}
         for nom, m in tous.items()
