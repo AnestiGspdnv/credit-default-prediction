@@ -38,18 +38,16 @@ def main():
         tous[nom] = {k: v for k, v in metriques.items()
                      if k in ["accuracy", "precision", "recall", "f1_score", "auc_roc"]}
 
-    print("\n" + "-" * 65)
     recap = pd.DataFrame(tous).T.round(4)
     print(recap.to_string())
-    print("-" * 65)
 
     meilleur_nom = max(tous, key=lambda k: tous[k].get("auc_roc", 0))
     meilleur_auc = tous[meilleur_nom]["auc_roc"]
     meilleur_f1 = tous[meilleur_nom]["f1_score"]
 
-    print(f"\n   Meilleur modèle : {meilleur_nom}")
-    print(f"     AUC-ROC  = {meilleur_auc:.4f}")
-    print(f"     F1-Score = {meilleur_f1:.4f}")
+    print(f"\nMeilleur modèle : {meilleur_nom}")
+    print(f"AUC-ROC  = {meilleur_auc:.4f}")
+    print(f"F1-Score = {meilleur_f1:.4f}")
 
     tous_float = {
         nom: {k: float(v) for k, v in m.items()}
@@ -58,7 +56,7 @@ def main():
     with open("resultats/comparaison_finale.json", "w") as f:
         json.dump(tous_float, f, indent=2, ensure_ascii=False)
 
-    print(f"\n  Fichiers générés dans le dossier resultats")
+    print(f"\nFichiers générés dans le dossier resultats")
     print("################ PIPELINE TERMINÉ ################")
 
 if __name__ == "__main__":
