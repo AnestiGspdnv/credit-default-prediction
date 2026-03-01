@@ -94,8 +94,7 @@ class ReseauCredit(nn.Module):
         return logits
 
 # fonctions d'Entraînement
-def entrainer_reseau(model, criterion, X_train, y_train, X_val, y_val,
-                     lr=0.001, epochs=100, batch_size=256, patience=15):
+def entrainer_reseau(model, criterion, X_train, y_train, X_val, y_val, lr=0.001, epochs=100, batch_size=256, patience=15):
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = model.to(device)
@@ -177,8 +176,6 @@ def predire_proba(model, X):
 # principal
 def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, y_val=None, y_test=None):
 
-    print("Apprentissage profond et Focal Loss")
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device : {device}")
 
@@ -188,8 +185,8 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     nb_features = X_train.shape[1]
     print(f"Nm de features : {nb_features}")
 
-    print("\nOptuna")
-
+    # Partie 1 : Optimisation des hyperparamètres Optuna
+    print("\n1.Optimisation Optuna")
     def objectif_nn(trial):
         n_couches = trial.suggest_int("n_couches", 2, 4)
         dims = []
@@ -230,12 +227,12 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     study = optuna.create_study(direction="maximize")
     study.optimize(objectif_nn, n_trials=15)
 
-    print(f"\nMeilleur AUC-ROC : {study.best_value:.4f}")
+    print(f"Meilleur AUC-ROC : {study.best_value:.4f}")
     print(f"Meilleurs paramètres: {study.best_params}")
 
 
     # Partie 2:
-    print("\nEntraînement Final")
+    print("\n2.Entraînement Final")
 
     bp = study.best_params
     n_couches = bp["n_couches"]
@@ -249,7 +246,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     model_final = ReseauCredit(nb_features, couches=dims, dropout=bp["dropout"])
     criterion_final = FocalLoss(alpha=bp["alpha"], gamma=bp["gamma"])
 
-    print(f"\n  Critère utilisé : {criterion_final}")
+    print(f"\nCritère utilisé : {criterion_final}")
 
     historique = entrainer_reseau(
         model_final, criterion_final,
@@ -259,8 +256,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     )
 
     # Partie 3
-
-    print("\n Courbes d'apprentissage")
+    print("\n3.Courbes d'apprentissage")
 
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(historique["train_loss"], label="Train Loss", linewidth=2)
@@ -284,14 +280,12 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     print(f"Écart (overfitting): {gap:.4f}")
 
     if gap > 0.1:
-        print("un peu de surapprentissage, mais le early stopping l'a limité")
+        print("Un peu de surapprentissage, mais le early stopping l'a limité")
     else:
-        print("pas de surapprentissage visible")
+        print("Pas de surapprentissage visible")
 
     # Partie 4 :
-
-    print("\nÉvaluation sur le Test set")
-
+    print("\n4.Évaluation sur le Test set")
 
     y_proba = predire_proba(model_final, X_test)
     y_pred = (y_proba >= 0.5).astype(int)
@@ -307,6 +301,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
     print(f"recall : {rec:.4f}")
     print(f"f1-Score: {f1:.4f}")
     print(f"Auc-Roc: {auc:.4f}")
+    print('\n')
     print(classification_report(y_test, y_pred, target_names=["Non-défaut", "Défaut"]))
 
     # matrice de confusion
@@ -330,7 +325,7 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
 
 
     # Partie 5
-    print("\n Cross-Validation du Deep Learning (5-Fold)")
+    print("\n5.Cross-Validation du Deep Learning (5-Fold)")
 
     # combiner train et val pour la cv
     X_cv = np.vstack([X_train.values, X_val.values])
@@ -387,8 +382,5 @@ def entrainer_deep_learning(X_train=None, X_val=None, X_test=None,y_train=None, 
 
     return metriques, y_proba
 
-
-# !
 if __name__ == "__main__":
     metriques, _ = entrainer_deep_learning()
-    print("\nEntraînement deep learning terminé")
